@@ -1,5 +1,5 @@
-name: Sample Slack Slash Command
-description: Node Slack slash command example
+name: Foxden
+description: Responds to Foxden meeting requests
 avatar: images/avatar.jpg
 slackscopes:
   - commands
