@@ -1,6 +1,7 @@
 var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
+var request = require('request');
 
 var VERIFY_TOKEN = process.env.SLACK_VERIFY_TOKEN;
 if (!VERIFY_TOKEN) {
@@ -26,17 +27,35 @@ app.route('/foxden')
       return res.status(401).send('Invalid token');
     }
 
-    var message = 'Welcome to the Foxden bot';
+    var message = 'Welcome to the Foxden bot, ' + req.body.user_name + '. Start a meeting at https://my.foxden.io!';
 
     // Handle any help requests
     if (req.body.text === 'help') {
       message = "No help here yet";
     }
 
-    res.json({
-      response_type: 'ephemeral',
-      text: message
-    });
+    if (req.body.text === 'start') {
+      request.post({
+        host: 'https://slack.com',
+        path: '/api/users.list',
+        form: {
+          token: process.env.SLACK_AUTH_TOKEN,
+          user: req.body.user_id
+        }
+      }, function(err, response, body) {
+        res.json({
+          response_type: 'ephemeral',
+          err: err,
+          resnse: response,
+          text: body
+        });
+      });
+    } else {
+      res.json({
+        response_type: 'ephemeral',
+        text: message
+      });
+    }
   });
 
 app.listen(PORT, function (err) {
