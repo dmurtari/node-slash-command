@@ -16,7 +16,7 @@ if (!PORT) {
 var app = express();
 app.use(morgan('dev'));
 
-app.route('/beepboop')
+app.route('/foxden')
   .get(function (req, res) {
     res.sendStatus(200);
   })
@@ -45,4 +45,4 @@ app.listen(PORT, function (err) {
   }
 
   console.log('Server successfully started on port %s', PORT);
-})
+});
